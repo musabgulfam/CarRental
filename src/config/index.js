@@ -1,0 +1,1 @@
+export const BASE_URL = "https://2616-175-107-217-10.ngrok.io/";
