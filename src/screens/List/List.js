@@ -5,18 +5,21 @@ import {
     SafeAreaView,
     Image,
     TouchableOpacity,
-    ScrollView,
+    FlatList,
     Dimensions
 } from 'react-native';
 import { Card } from './Card';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { CalendarSheet } from './CalendarSheet';
+import { useStoreState } from 'easy-peasy';
 
 const { height } = Dimensions.get('window');
 
 export function List(props) {
 
     const refRBSheet = useRef();
+
+    const cars = useStoreState(state => state.cars);
 
     return (
         <View style={{
@@ -115,18 +118,28 @@ export function List(props) {
                 </View>
             </View>
             
-            <ScrollView 
+            {/* <ScrollView 
                 style={{
                     marginTop: 30,
                     marginHorizontal: 20
                 }}
                 showsVerticalScrollIndicator={false}
             >
-                <Card navigation={props.navigation}/>
-                <Card navigation={props.navigation}/>
-                <Card navigation={props.navigation}/>
-                <Card navigation={props.navigation}/>
-            </ScrollView>
+                
+            </ScrollView> */}
+            <FlatList 
+                data={cars}
+                renderItem={({ item }) => <Card 
+                    navigation={props.navigation}
+                    title={item.title}
+                    rent={item.rent}
+                    model={item.car_model}
+                />}
+                style={{
+                    marginTop: 30,
+                    marginHorizontal: 20
+                }}
+            />
         </View>
     );
 }

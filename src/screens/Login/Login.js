@@ -13,8 +13,16 @@ import {
     TextField,
     DropDown
 } from '../../components'
+import { useStoreActions } from "easy-peasy";
 
 export function Login(props){
+
+    const [email, setEmail] = useState('');
+    
+    const [password, setPassword] = useState('');
+
+    const loginAction = useStoreActions(actions => actions.loginAction)
+
     return (
         <ImageBackground
             style={{
@@ -31,10 +39,15 @@ export function Login(props){
             
             <TextField 
                 placeholder={"Email"}
+                value={email}
+                onChange={text => setEmail(text)}
             />
 
             <TextField 
                 placeholder={"Password"}
+                value={password}
+                onChange={text => setPassword(text)}
+                secureTextEntry={true}
             />
 
             <TextField 
@@ -54,7 +67,11 @@ export function Login(props){
 
             <TouchableOpacity 
                 onPress={_ => {
-                    props.navigation.navigate('Main');
+                    // props.navigation.navigate('Main');
+                    loginAction({
+                        email,
+                        password
+                    })
                 }}
                 style={{
                     borderRadius: 30,

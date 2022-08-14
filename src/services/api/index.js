@@ -6,7 +6,7 @@ export const URIS = {
     signup: 'auth/signup/',
     login: 'auth/login/',
     cars: 'car/get-cars/',
-    city: city => `dashboard/city-filter/?city=${city}`
+    city: cityName => `dashboard/search/?city=${cityName}`
 };
 
 const createApiClient = (baseURL = BASE_URL) => {
@@ -26,8 +26,17 @@ const createApiClient = (baseURL = BASE_URL) => {
         return api.post(URIS.signup, payload)
     };
 
+    const login = payload => api.post(URIS.login, payload);
+
+    const getCars = _ => api.get(URIS.cars);
+
+    const cityFilter = cityName => api.get(URIS.city(cityName));
+
     return {
-        createUser
+        createUser,
+        login,
+        getCars,
+        cityFilter
     };
 };
 

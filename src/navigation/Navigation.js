@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -7,10 +7,13 @@ import {
     Search,
     Trips,
     List,
-    Detail
+    Detail,
+    Loading
 } from '../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -125,6 +128,25 @@ function DetailTab(props){
 }
 
 export function Navigation(props) {
+
+    const user = useStoreState(state => state.user);
+
+    const setUser = useStoreActions(action => action.setUser);
+
+    const [loading, setLoading] = useState(false);
+
+    useEffect(_ => {
+        getUser();
+    }, [])
+
+    async function getUser(){
+        setLoading(true);
+        const user = await AsyncStorage.getItem('user');
+        user !== null ? setUser(JSON.parse(user)) : null
+        setLoading(false);
+        console.log('User: ', JSON.parse(user));
+    }
+
     return (
         <NavigationContainer>
             <Stack.Navigator
@@ -133,8 +155,7 @@ export function Navigation(props) {
                 }}
                 initialRouteName={"Auth"}
             >
-                <Stack.Screen name={"Auth"} component={AuthNavigation} />
-                <Stack.Screen name={"Main"} component={DetailTab} />
+                {loading ? <Stack.Screen name={"Loading"} component={Loading} /> : user === null ? <Stack.Screen name={"Auth"} component={AuthNavigation} /> : <Stack.Screen name={"Main"} component={DetailTab} />}
             </Stack.Navigator>
         </NavigationContainer>
     );

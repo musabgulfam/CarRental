@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     View,
     Text,
@@ -6,12 +6,18 @@ import {
     Dimensions,
     Image,
     SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from "react-native";
+import { useStoreActions } from "easy-peasy";
 
 const { height, width } = Dimensions.get('window');
 
 export function SearchSheet ({ close, navigation }) {
+
+    const cityFilterAction = useStoreActions(actions => actions.cityFilterAction);
+    const [city, setCity] = useState('')
+
     return (
         <View style={{
             flex: 1,
@@ -32,7 +38,9 @@ export function SearchSheet ({ close, navigation }) {
                 </TouchableOpacity>
             </SafeAreaView>
             
-            <TextInput 
+            <TextInput
+                value={city}
+                onChangeText={text => setCity(text)}
                 placeholder="City, Airport, Hotel or Address"
                 placeholderTextColor={"rgba(0, 0, 0, 0.48)"}
                 style={{
@@ -44,7 +52,8 @@ export function SearchSheet ({ close, navigation }) {
                     paddingBottom: 10,
                     color: 'black'
                 }}
-                onSubmitEditing={_ => {
+                onSubmitEditing={async _ => {
+                    await cityFilterAction(city);
                     close();
                     navigation.navigate('List');
                 }}

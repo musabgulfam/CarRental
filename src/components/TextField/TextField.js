@@ -35,6 +35,9 @@ export function TextField({
                 onChangeText={onChange}
                 placeholder={placeholder}
                 placeholderTextColor={'rgba(0, 0, 0, 0.51)'}
+                autoCorrect={false}
+                autoComplete="off"
+                autoCapitalize="none"
             />
         </View>
     );

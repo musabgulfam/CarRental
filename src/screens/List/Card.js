@@ -9,7 +9,12 @@ import {
 
 const { width } = Dimensions.get('window');
 
-export function Card({ navigation }){
+export function Card({ 
+    navigation, 
+    title,
+    rent,
+    model
+}){
     return (
         <TouchableOpacity
             style={{
@@ -49,13 +54,13 @@ export function Card({ navigation }){
                     fontWeight: '700',
                     fontSize: 25,
                     color: 'black'
-                }}>Porsche
+                }}>{title}
                 </Text>
                 <Text style={{
                     fontWeight: '700',
                     fontSize: 25,
                     color: 'black'
-                }}>911 2017</Text>
+                }}>{model}</Text>
                 <Text style={{
                     color: 'rgba(0, 0, 0, 0.6)',
                     fontSize: 15,
@@ -78,7 +83,7 @@ export function Card({ navigation }){
                         fontSize: 20,
                         fontWeight: '900',
                         color: '#00000099'
-                    }}>$370</Text>/day</Text>
+                    }}>${rent}</Text>/day</Text>
                 </View>
             </View>
         </TouchableOpacity>

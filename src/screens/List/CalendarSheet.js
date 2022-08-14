@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from "@react-native-community/datetimepicker";
-import moment from 'moment';
+import moment, { months } from 'moment';
 
 const { height, width } = Dimensions.get('window');
 
@@ -21,13 +21,50 @@ export function CalendarSheet({ close }){
 
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
-    const [startDate, setStartDate] = useState(_today);
-
-    const [endDate, setEndDate] = useState(_maxDate);
-
     const [markedDates, setMarkedDates] = useState({
     //    [startDate]: {selected: true, selectedColor: '#F7941D'}
     });
+
+    function renderTripStartDate(dates){
+        const tempObj = { ...dates };
+        if(!Object.keys(tempObj).length){
+            return '--'
+        }
+        if(Object.keys(tempObj).length === 1){
+            let [day] = Object.keys(tempObj)
+            return `${moment(day).format('ddd')}, ${moment(day).date()} ${moment(day).format('MMM')}`
+        }
+        let [day1, day2] = Object.keys(tempObj);
+        day1 = moment(day1).format(_format);
+        day2 = moment(day2).format(_format);
+        console.log('Day1: ', day1, ' Day2: ', day2);
+        if(day1 < day2){
+            return `${moment(day1).format('ddd')}, ${moment(day1).date()} ${moment(day1).format('MMM')}`
+        }
+        else if(day2 < day1){
+            return `${moment(day2).format('ddd')}, ${moment(day2).date()} ${moment(day2).format('MMM')}`
+        }
+    }
+
+    function renderTripEndDate(dates){
+        const tempObj = { ...dates };
+        if(Object.keys(tempObj).length <= 1){
+            console.log('Dates: ', tempObj);
+            return '--'
+        }
+        let [day1, day2] = Object.keys(tempObj);
+        day1 = moment(day1).format(_format);
+        day2 = moment(day2).format(_format);
+        console.log('Day1: ', day1, ' Day2: ', day2);
+        if(day1 > day2){
+            return `${moment(day1).format('ddd')}, ${moment(day1).date()} ${moment(day1).format('MMM')}`
+        }
+        else if(day2 > day1){
+            return `${moment(day2).format('ddd')}, ${moment(day2).date()} ${moment(day2).format('MMM')}`
+        }
+    }
+
+    console.log('MD: ', markedDates);
 
     return (
         <View style={{
@@ -84,7 +121,7 @@ export function CalendarSheet({ close }){
                         <Text style={{
                             fontWeight: '700',
                             fontSize: 24
-                        }}>Mon, 06 July</Text>
+                        }}>{renderTripStartDate({...markedDates})}</Text>
                         <Text style={{
                             fontWeight: '600',
                             fontSize: 18
@@ -107,7 +144,7 @@ export function CalendarSheet({ close }){
                         <Text style={{
                             fontWeight: '700',
                             fontSize: 24
-                        }}>Mon, 06 July</Text>
+                        }}>{renderTripEndDate({...markedDates})}</Text>
                         <Text style={{
                             fontWeight: '600',
                             fontSize: 18
@@ -154,17 +191,25 @@ export function CalendarSheet({ close }){
                     // borderColor: 'red'
                 }}
                 onDayPress={day => {
+                    let selectedDate = moment(day.dateString).format(_format);
+                    if(_today > selectedDate){
+                        return;
+                    }
                     console.log('length: ', Object.keys(markedDates).length);
                     if(Object.keys(markedDates).length >= 2){
                         setMarkedDates({});
                         return;
                     }
-                    let selectedDate = moment(day.dateString).format(_format);
+                    let tempObj = { ...markedDates };
                     let selected = true;
                     if(markedDates[selectedDate]){
-                        selected = !(markedDates[selectedDate].selected);
+                        // selected = !(markedDates[selectedDate].selected);
+                        delete tempObj[selectedDate];
                     }
-                    setMarkedDates({...markedDates, ...{ [selectedDate]: { selected, selectedColor: '#F7941D'} }});
+                    else{
+                        tempObj[selectedDate] = { selected: true, selectedColor: '#F7941D'}
+                    }
+                    setMarkedDates({ ...tempObj });
                 }}
                 markedDates={markedDates}
             />
