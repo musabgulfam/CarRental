@@ -8,9 +8,9 @@ import {
     SafeAreaView
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import DateTimePickerModal from "@react-native-community/datetimepicker"
 import DatePicker from 'react-native-date-picker'
 import moment, { months } from 'moment';
+import { useStoreActions } from 'easy-peasy';
 
 const { height, width } = Dimensions.get('window');
 
@@ -19,6 +19,8 @@ const _today = moment().format(_format)
 const _maxDate = moment().add(2, 'days').format(_format)
 
 export function CalendarSheet({ close }) {
+
+    const setAllDates = useStoreActions(actions => actions.setAllDates);
 
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
@@ -34,7 +36,7 @@ export function CalendarSheet({ close }) {
         //    [startDate]: {selected: true, selectedColor: '#F7941D'}
     });
 
-    function renderTripStartDate(dates) {
+    function renderTripStartDate(dates, returnOnlyDate=false) {
         const tempObj = { ...dates };
         if (!Object.keys(tempObj).length) {
             return '--'
@@ -47,6 +49,14 @@ export function CalendarSheet({ close }) {
         day1 = moment(day1).format(_format);
         day2 = moment(day2).format(_format);
         // console.log('Day1: ', day1, ' Day2: ', day2);
+        if(returnOnlyDate){
+            if (day1 < day2) {
+                return `${day1}`
+            }
+            else if (day2 < day1) {
+                return `${day2}`
+            }
+        }
         if (day1 < day2) {
             return `${moment(day1).format('ddd')}, ${moment(day1).date()} ${moment(day1).format('MMM')}`
         }
@@ -55,7 +65,7 @@ export function CalendarSheet({ close }) {
         }
     }
 
-    function renderTripEndDate(dates) {
+    function renderTripEndDate(dates, returnOnlyDate=false) {
         const tempObj = { ...dates };
         if (Object.keys(tempObj).length <= 1) {
             // console.log('Dates: ', tempObj);
@@ -65,6 +75,14 @@ export function CalendarSheet({ close }) {
         day1 = moment(day1).format(_format);
         day2 = moment(day2).format(_format);
         // console.log('Day1: ', day1, ' Day2: ', day2);
+        if(returnOnlyDate){
+            if (day1 > day2) {
+                return `${day1}`
+            }
+            else if (day2 > day1) {
+                return `${day2}`
+            }
+        }
         if (day1 > day2) {
             return `${moment(day1).format('ddd')}, ${moment(day1).date()} ${moment(day1).format('MMM')}`
         }
@@ -345,6 +363,27 @@ export function CalendarSheet({ close }) {
                 marginTop: 50
             }}>
                 <TouchableOpacity
+                    onPress={_ => {
+                        if(Object.keys(markedDates).length !== 2){
+                            alert("Please select all dates");
+                            return;
+                        }
+                        // console.log('SUBMIT LOG: ', {
+                        //     UI_startDate: `${renderTripStartDate({ ...markedDates })}, ${moment(startTime).format('LT')}`,
+                        //     UI_endDate: `${renderTripEndDate({ ...markedDates })}, ${moment(endTime).format('LT')}`,
+                        //     endDate: `${renderStartEndDate({ ...markedDates }, true)}`,
+                        //     startDate: `${renderTripEndDate({ ...markedDates }, true)}`,
+                        // });
+                        setAllDates({
+                            UI_startDate: `${renderTripStartDate({ ...markedDates })}`,
+                            UI_startTime: `${moment(startTime).format('LT')}`,
+                            UI_endDate: `${renderTripEndDate({ ...markedDates })}`,
+                            UI_endTime: `${moment(endTime).format('LT')}`,
+                            endDate: `${renderTripStartDate({ ...markedDates }, true)}`,
+                            startDate: `${renderTripEndDate({ ...markedDates }, true)}`,
+                        });
+                        close();
+                    }}
                     style={{
                         width: 345,
                         height: 51,

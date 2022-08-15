@@ -8,7 +8,8 @@ import {
     Trips,
     List,
     Detail,
-    Loading
+    Loading,
+    Invoice
 } from '../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
@@ -61,7 +62,7 @@ function TabNavigation(props) {
             initialRouteName={"Search"}
         >
             <Tab.Screen
-                name="SearchTab"
+                name="Search"
                 component={SearchTab}
                 options={{
                     tabBarIcon: ({ focused }) => focused ? <Image
@@ -123,6 +124,7 @@ function DetailTab(props){
         >
             <DetailTabStack.Screen name="Detail" component={Detail} />
             <DetailTabStack.Screen name="Tab" component={TabNavigation} />
+            <DetailTabStack.Screen name="Invoice" component={Invoice} />
         </DetailTabStack.Navigator>
     );
 }

@@ -1,18 +1,68 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
     Image,
     TouchableOpacity,
     View,
     Text,
     ScrollView,
-    SafeAreaView
+    SafeAreaView,
+    Dimensions
 } from 'react-native';
+import { useStoreActions, useStoreState } from "easy-peasy";
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { CalendarSheet } from "../../components";
+
+const { height } = Dimensions.get('window');
 
 export function Detail(props) {
+
+    const UI_startDate = useStoreState(state => state.UI_startDate);
+
+    const UI_endDate = useStoreState(state => state.UI_endDate);
+
+    const startDate = useStoreState(state => state.startDate);
+
+    const endDate = useStoreState(state => state.endDate);
+
+    const availableCarsAction = useStoreActions(actions => actions.availableCarsAction);
+
+    const UI_endTime = useStoreState(state => state.UI_endTime);
+
+    const UI_startTime = useStoreState(state => state.UI_startTime);
+
+    const {
+        title,
+        car_model: model,
+        year,
+        rent,
+        features,
+        basics,
+        id,
+        city
+    } = props.route.params.data;
+
+    const refRBSheet = useRef();
+
     return (
         <ScrollView style={{
             flex: 1
         }}>
+            <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={false}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: "#000"
+                    }
+                }}
+                height={height}
+            >
+                <CalendarSheet close={_ => refRBSheet.current.close()} />
+            </RBSheet>
             <View style={{
                 height: 300
             }}>
@@ -68,7 +118,7 @@ export function Detail(props) {
                         fontWeight: '700',
                         lineHeight: 33.25,
                         color: 'black'
-                    }}>Porsche 911 2017</Text>
+                    }}>{`${title} ${model} ${year}`}</Text>
                     <View>
                         <View style={{
                             flexDirection: 'row',
@@ -96,7 +146,7 @@ export function Detail(props) {
                     fontSize: 15,
                     fontWeight: '600',
                     marginTop: 10
-                }}>27 Trips</Text>
+                }}>{city} Trips</Text>
             </View>
             <View style={{
                 paddingHorizontal: 15,
@@ -136,15 +186,19 @@ export function Detail(props) {
                                 fontWeight: '400',
                                 fontSize: 16,
                                 color: 'black'
-                            }}>Mon, 06 July, 10:00 AM</Text>
+                            }}>{UI_startDate !== "" ? `${UI_startDate}, ${UI_startTime}` : "Start date: N/A"}</Text>
                             <Text style={{
                                 fontWeight: '400',
                                 fontSize: 16,
                                 color: 'black'
-                            }}>Mon, 06 July, 10:00 AM</Text>
+                            }}>{UI_endDate !== "" ? `${UI_endDate}, ${UI_endTime}` : "End date: N/A"}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={_ => {
+                            refRBSheet.current.open()
+                        }}
+                    >
                         <Image
                             source={require('../../../assets/submit.png')}
                             style={{
@@ -194,7 +248,7 @@ export function Detail(props) {
                                 fontWeight: '400',
                                 fontSize: 16,
                                 color: 'black'
-                            }}>Los Angeles, CA 90015</Text>
+                            }}>{city}</Text>
                             {/* <Text style={{
                                 fontWeight: '400',
                                 fontSize: 16,
@@ -202,7 +256,7 @@ export function Detail(props) {
                             }}>Mon, 06 July, 10:00 AM</Text> */}
                         </View>
                     </View>
-                    <TouchableOpacity>
+                    {/* <TouchableOpacity>
                         <Image
                             source={require('../../../assets/submit.png')}
                             style={{
@@ -211,7 +265,7 @@ export function Detail(props) {
                                 resizeMode: 'contain'
                             }}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
             <View style={{
@@ -595,15 +649,40 @@ export function Detail(props) {
                                 fontSize: 20,
                                 fontWeight: '900',
                                 color: '#00000099'
-                            }}>$370</Text>/day</Text>
-                            <Text style={{
+                            }}>$ {rent}</Text>/day</Text>
+                            {/* <Text style={{
                                 fontWeight: '600',
                                 fontSize: 14,
                                 fontStyle: 'italic',
                                 color: 'rgba(0, 0, 0, 0.5)'
-                            }}>US $456/day est. total</Text>
+                            }}>US $456/day est. total</Text> */}
                         </View>
                         <TouchableOpacity
+                            onPress={async _ => {
+                                if(startDate === "" || endDate === ""){
+                                    alert("Please select start and end date.");
+                                    return;
+                                }
+                                const response = await availableCarsAction({
+                                    car_id: id,
+                                    start_date: startDate,
+                                    end_date: endDate
+                                });
+                                console.log('RR: ', response.data);
+                                if(response.data.msg !== "success"){
+                                    alert("Car is not available in specified time period.")
+                                }
+                                else{
+                                    props.navigation.navigate('Invoice', {
+                                        title,
+                                        rent,
+                                        id,
+                                        model,
+                                        year,
+                                        city
+                                    });
+                                }
+                            }}
                             style={{
                                 width: 124,
                                 height: 42,

@@ -10,7 +10,7 @@ import {
 const { width } = Dimensions.get('window');
 
 export function Card({ 
-    navigation, 
+    onPress, 
     title,
     rent,
     model
@@ -24,9 +24,7 @@ export function Card({
                 borderRadius: 14,
                 marginVertical: 20
             }}
-            onPress={_ => {
-                navigation.navigate('Detail');
-            }}
+            onPress={onPress}
         >
             <View style={{
                 height: 194,

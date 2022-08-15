@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Card } from './Card';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { CalendarSheet } from './CalendarSheet';
+import { CalendarSheet } from '../../components';
 import { useStoreState } from 'easy-peasy';
 
 const { height } = Dimensions.get('window');
@@ -134,6 +134,11 @@ export function List(props) {
                     title={item.title}
                     rent={item.rent}
                     model={item.car_model}
+                    onPress={_ => {
+                        props.navigation.navigate('Detail', {
+                            data: item
+                        })
+                    }}
                 />}
                 style={{
                     marginTop: 30,
