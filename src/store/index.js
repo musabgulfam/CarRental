@@ -32,7 +32,7 @@ const store = createStore({
     }),
     createUserAction: thunk(async (action, payload) => {
         const response = await api.createUser(payload);
-        if(response.data.msg === "success !"){
+        if(response.data.msg === "success !" && response.ok){
             action.setUser({
                 "id": response.data?.id || '',
                 "first_name": response.data?.first_name || '',

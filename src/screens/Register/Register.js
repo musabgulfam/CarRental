@@ -27,7 +27,8 @@ export function Register(props) {
         <ImageBackground
             style={{
                 flex: 1,
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
+                paddingTop: 80,
                 alignItems: 'center',
                 paddingBottom: 20
             }}
@@ -43,7 +44,7 @@ export function Register(props) {
                 lineHeight: 24,
                 textAlign: 'center',
                 fontWeight: '700'
-            }}>Looks like you don't have an account.{'\n'}Lets create a new account here.</Text>
+            }}>Lets create a new account here.</Text>
 
             <TextField
                 placeholder={"Full Name"}
@@ -57,11 +58,11 @@ export function Register(props) {
                 onChange={text => setEmail(text)}
             />
 
-            <TextField
+            {/* <TextField
                 placeholder={"Phone"}
                 value={phone}
                 onChange={text => setPhone(text)}
-            />
+            /> */}
 
             <TextField
                 placeholder={"Password"}
@@ -77,28 +78,7 @@ export function Register(props) {
                 secureTextEntry={true}
             />
 
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                marginTop: 10
-            }}>
-                <View style={{
-                    borderWidth: 1,
-                    borderColor: '#707070',
-                    width: 20,
-                    height: 22
-                }} />
-                <View style={{
-                    marginLeft: 10
-                }}>
-                    <Text style={{
-                        fontSize: 20,
-                        color: 'black'
-                    }}>I have read and agree to the terms</Text>
-                </View>
-            </View>
-
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={{
                     borderRadius: 30,
                     justifyContent: 'center',
@@ -123,19 +103,26 @@ export function Register(props) {
                 }}>Sign Up</Text>
             </TouchableOpacity>
 
-            <Text style={{
-                fontSize: 20,
-                color: 'black'
-            }}>Already have an account? <TouchableOpacity
-                onPress={_ => {
-                    props.navigation.navigate('Login');
-                }}
-            >
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                // marginBottom: 10
+            }}>
+                <Text style={{
+                    fontSize: 20,
+                    color: 'black'
+                }}>Already have an account?</Text>
+                <TouchableOpacity
+                    onPress={_ => {
+                        props.navigation.navigate('Login');
+                    }}
+                >
                     <Text style={{
                         color: '#F7941D',
                         fontSize: 20
-                    }}>Login</Text>
-                </TouchableOpacity></Text>
+                    }}> Login</Text>
+                </TouchableOpacity>
+            </View>
 
         </ImageBackground>
     );

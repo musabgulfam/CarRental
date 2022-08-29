@@ -19,7 +19,7 @@ export function Card({
         <TouchableOpacity
             style={{
                 width: width-40,
-                height: 341,
+                height: 349,
                 backgroundColor: '#FFFFFF',
                 borderRadius: 14,
                 marginVertical: 20

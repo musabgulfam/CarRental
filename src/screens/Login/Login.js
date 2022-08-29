@@ -7,13 +7,15 @@ import {
     TouchableOpacity,
     ImageBackground,
     StatusBar,
-    Image
+    Dimensions
 } from 'react-native'
 import {
     TextField,
     DropDown
 } from '../../components'
 import { useStoreActions } from "easy-peasy";
+
+const {height} = Dimensions.get('window');
 
 export function Login(props){
 
@@ -26,10 +28,10 @@ export function Login(props){
     return (
         <ImageBackground
             style={{
-                flex: 1,
-                justifyContent: 'flex-end',
+                height,
+                justifyContent: 'center',
                 alignItems: 'center',
-                paddingBottom: 20
+                paddingTop: 100
             }}
             source={require('../../../assets/background.png')}
         >
@@ -49,12 +51,6 @@ export function Login(props){
                 onChange={text => setPassword(text)}
                 secureTextEntry={true}
             />
-
-            <TextField 
-                placeholder={"Driver license #"}
-            />
-
-            <DropDown text={"Driver license state"} />
 
             <TouchableOpacity style={{
                 marginLeft: 120

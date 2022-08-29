@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     Text,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStoreState } from 'easy-peasy';
 import moment from 'moment';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { CheckoutSheet } from './CheckoutSheet';
+
+const { height, width } = Dimensions.get('window');
 
 export function Invoice(props) {
 
@@ -25,13 +30,15 @@ export function Invoice(props) {
 
     const [daysApart, setDaysApart] = useState(0);
 
+    const refRBSheetCheckout = useRef();
+
     useEffect(_ => {
 
         let startDateMoment = moment(startDate.split('-'));
         let endDateMoment = moment(endDate.split('-'));
         const diff = startDateMoment.diff(endDateMoment, 'days')
-        // console.log('DIFF: ', diff);
-        setDaysApart(diff);
+        console.log('DIFF: ', diff);
+        setDaysApart(isNaN(diff) ? 1 : diff);
 
     }, [startDate, endDate])
 
@@ -53,6 +60,22 @@ export function Invoice(props) {
                 paddingHorizontal: 15
             }}
         >
+            <RBSheet
+                ref={refRBSheetCheckout}
+                closeOnDragDown={true}
+                closeOnPressMask={false}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: "#000"
+                    }
+                }}
+                height={height}
+            >
+                <CheckoutSheet close={_ => refRBSheetCheckout.current.close()} navigation={props.navigation.navigate} />
+            </RBSheet>
             <SafeAreaView style={{
                 // flexDirection: 'row'
                 justifyContent: 'center',
@@ -284,7 +307,11 @@ export function Invoice(props) {
                         }}>Payment Info</Text>
 
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={_ => {
+                            refRBSheetCheckout.current.open();
+                        }}
+                    >
                         <Image
                             source={require('../../../assets/submit.png')}
                             style={{

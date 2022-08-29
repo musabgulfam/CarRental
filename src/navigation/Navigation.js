@@ -9,7 +9,9 @@ import {
     List,
     Detail,
     Loading,
-    Invoice
+    Invoice,
+    Delivery,
+    Location
 } from '../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
@@ -125,6 +127,8 @@ function DetailTab(props){
             <DetailTabStack.Screen name="Detail" component={Detail} />
             <DetailTabStack.Screen name="Tab" component={TabNavigation} />
             <DetailTabStack.Screen name="Invoice" component={Invoice} />
+            <DetailTabStack.Screen name="Delivery" component={Delivery} />
+            <DetailTabStack.Screen name="Location" component={Location} />
         </DetailTabStack.Navigator>
     );
 }
@@ -157,7 +161,7 @@ export function Navigation(props) {
                 }}
                 initialRouteName={"Auth"}
             >
-                {loading ? <Stack.Screen name={"Loading"} component={Loading} /> : user === null ? <Stack.Screen name={"Auth"} component={AuthNavigation} /> : <Stack.Screen name={"Main"} component={DetailTab} />}
+                {loading ? <Stack.Screen name={"Loading"} component={Loading} /> : !user ? <Stack.Screen name={"Auth"} component={AuthNavigation} /> : <Stack.Screen name={"Main"} component={DetailTab} />}
             </Stack.Navigator>
         </NavigationContainer>
     );

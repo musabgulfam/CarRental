@@ -1,18 +1,19 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
     Image,
     TouchableOpacity,
     View,
     Text,
     ScrollView,
-    SafeAreaView,
+    ActivityIndicator,
     Dimensions
 } from 'react-native';
 import { useStoreActions, useStoreState } from "easy-peasy";
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { CalendarSheet } from "../../components";
+import { DeliveryOptionsSheet } from "./DeliveryOptionsSheet";
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 export function Detail(props) {
 
@@ -30,6 +31,8 @@ export function Detail(props) {
 
     const UI_startTime = useStoreState(state => state.UI_startTime);
 
+    const [loading, setLoading] = useState(false);
+
     const {
         title,
         car_model: model,
@@ -43,10 +46,31 @@ export function Detail(props) {
 
     const refRBSheet = useRef();
 
+    const refRBSheetDelivery = useRef();
+
     return (
-        <ScrollView style={{
-            flex: 1
-        }}>
+        <ScrollView 
+            style={{
+                flex: 1
+            }}
+            showsVerticalScrollIndicator={false}    
+        >
+            <RBSheet
+                ref={refRBSheetDelivery}
+                closeOnDragDown={true}
+                closeOnPressMask={false}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: "#000"
+                    }
+                }}
+                height={height}
+            >
+                <DeliveryOptionsSheet close={_ => refRBSheetDelivery.current.close()} navigation={props.navigation.navigate} />
+            </RBSheet>
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
@@ -256,7 +280,11 @@ export function Detail(props) {
                             }}>Mon, 06 July, 10:00 AM</Text> */}
                         </View>
                     </View>
-                    {/* <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={_ => {
+                            refRBSheetDelivery.current.open();
+                        }}
+                    >
                         <Image
                             source={require('../../../assets/submit.png')}
                             style={{
@@ -265,7 +293,7 @@ export function Detail(props) {
                                 resizeMode: 'contain'
                             }}
                         />
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={{
@@ -659,29 +687,40 @@ export function Detail(props) {
                         </View>
                         <TouchableOpacity
                             onPress={async _ => {
-                                if(startDate === "" || endDate === ""){
-                                    alert("Please select start and end date.");
-                                    return;
-                                }
-                                const response = await availableCarsAction({
-                                    car_id: id,
-                                    start_date: startDate,
-                                    end_date: endDate
+                                // if(startDate === "" || endDate === ""){
+                                //     alert("Please select start and end date.");
+                                //     return;
+                                // }
+                                // setLoading(true)
+                                // const response = await availableCarsAction({
+                                //     car_id: id,
+                                //     start_date: startDate,
+                                //     end_date: endDate
+                                // });
+                                // console.log('RR: ', response.data);
+                                // if(response.data.msg !== "success"){
+                                //     alert("Car is not available in specified time period.")
+                                // }
+                                // else{
+                                //     // props.navigation.navigate('Invoice', {
+                                //     //     title,
+                                //     //     rent,
+                                //     //     id,
+                                //     //     model,
+                                //     //     year,
+                                //     //     city
+                                //     // });
+                                //     // props.navigation.navigate('Delivery');
+                                // }
+                                // setLoading(false)
+                                props.navigation.navigate('Invoice', {
+                                    title,
+                                    rent,
+                                    id,
+                                    model,
+                                    year,
+                                    city
                                 });
-                                console.log('RR: ', response.data);
-                                if(response.data.msg !== "success"){
-                                    alert("Car is not available in specified time period.")
-                                }
-                                else{
-                                    props.navigation.navigate('Invoice', {
-                                        title,
-                                        rent,
-                                        id,
-                                        model,
-                                        year,
-                                        city
-                                    });
-                                }
                             }}
                             style={{
                                 width: 124,
@@ -692,13 +731,16 @@ export function Detail(props) {
                                 alignItems: 'center'
                             }}
                         >
-                            <Text
+                            {!loading ? <Text
                                 style={{
                                     fontWeight: '600',
                                     fontSize: 17,
                                     color: 'white'
                                 }}
-                            >Continue</Text>
+                            >Continue</Text> : <ActivityIndicator 
+                                size={"large"}
+                                color="white"
+                            />}
                         </TouchableOpacity>
                     </View>
                 </View>

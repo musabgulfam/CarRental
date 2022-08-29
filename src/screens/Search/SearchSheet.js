@@ -7,7 +7,7 @@ import {
     Image,
     SafeAreaView,
     TouchableOpacity,
-    Alert
+    ActivityIndicator
 } from "react-native";
 import { useStoreActions } from "easy-peasy";
 
@@ -16,7 +16,8 @@ const { height, width } = Dimensions.get('window');
 export function SearchSheet ({ close, navigation }) {
 
     const cityFilterAction = useStoreActions(actions => actions.cityFilterAction);
-    const [city, setCity] = useState('')
+    const [city, setCity] = useState('');
+    const [loading, setLoading] = useState(false);
 
     return (
         <View style={{
@@ -53,7 +54,9 @@ export function SearchSheet ({ close, navigation }) {
                     color: 'black'
                 }}
                 onSubmitEditing={async _ => {
+                    setLoading(true);
                     await cityFilterAction(city);
+                    setLoading(false);
                     close();
                     navigation.navigate('List');
                 }}
@@ -108,6 +111,19 @@ export function SearchSheet ({ close, navigation }) {
                     }}>Karachi, Sindh</Text>
                 </View>
             </View>
+
+            {
+                loading ? <View style={{
+                    marginTop: 50,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <ActivityIndicator 
+                        size={'large'}
+                        color="black"
+                    />
+                </View> : null
+            }
 
         </View>
     );
