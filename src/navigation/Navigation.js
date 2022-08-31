@@ -11,7 +11,8 @@ import {
     Loading,
     Invoice,
     Delivery,
-    Location
+    Location,
+    Profile
 } from '../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
@@ -33,9 +34,9 @@ function AuthNavigation(props) {
     );
 }
 
-function SearchTab(props){
+function SearchTab(props) {
     return (
-        <Stack.Navigator 
+        <Stack.Navigator
             screenOptions={{
                 headerShown: false
             }}
@@ -78,15 +79,15 @@ function TabNavigation(props) {
                     /> : <Image
                         source={require('../../assets/search_icon.png')}
                         style={{
-                            width: 32,
-                            height: 32,
+                            width: 25,
+                            height: 25,
                             resizeMode: 'contain',
                             tintColor: 'black'
                         }}
                     />
                 }}
             />
-            
+
             <Tab.Screen
                 name="Trips"
                 component={Trips}
@@ -94,8 +95,8 @@ function TabNavigation(props) {
                     tabBarIcon: ({ focused }) => focused ? <Image
                         source={require('../../assets/trips_icon.png')}
                         style={{
-                            width: 25,
-                            height: 25,
+                            width: 32,
+                            height: 32,
                             resizeMode: 'contain',
                             tintColor: 'white'
                         }}
@@ -111,11 +112,35 @@ function TabNavigation(props) {
                 }}
             />
 
+            <Tab.Screen
+                name="More"
+                component={Profile}
+                options={{
+                    tabBarIcon: ({ focused }) => focused ? <Image
+                        source={require('../../assets/more_focus.png')}
+                        style={{
+                            width: 35,
+                            height: 35,
+                            resizeMode: 'contain',
+                            tintColor: 'white'
+                        }}
+                    /> : <Image
+                        source={require('../../assets/more.png')}
+                        style={{
+                            width: 35,
+                            height: 35,
+                            resizeMode: 'contain',
+                            tintColor: 'black'
+                        }}
+                    />
+                }}
+            />
+
         </Tab.Navigator>
     );
 }
 
-function DetailTab(props){
+function DetailTab(props) {
     const DetailTabStack = createNativeStackNavigator();
     return (
         <DetailTabStack.Navigator
@@ -145,7 +170,7 @@ export function Navigation(props) {
         getUser();
     }, [])
 
-    async function getUser(){
+    async function getUser() {
         setLoading(true);
         const user = await AsyncStorage.getItem('user');
         user !== null ? setUser(JSON.parse(user)) : null
