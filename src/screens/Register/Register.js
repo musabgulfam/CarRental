@@ -89,6 +89,10 @@ export function Register(props) {
                     marginVertical: 10
                 }}
                 onPress={_ => {
+                    if(password !== confirmPassword){
+                        alert("Password not confirmed!");
+                        return;
+                    }
                     createUserAction({
                         email,
                         first_name: fullName,

@@ -78,7 +78,7 @@ export function Trips(props) {
             }}>
                 <View style={{
                     flex: 1,
-                    justifyContent: 'space-evenly',
+                    // justifyContent: 'space-evenly',
                     alignItems: 'center'
                 }}>
                     {selectedTab === "Booked" ? <><Image
@@ -86,24 +86,28 @@ export function Trips(props) {
                         style={{
                             width: 345,
                             height: 225,
-                            resizeMode: 'contain'
+                            resizeMode: 'contain',
+                            marginTop: 35
                         }}
                     />
                     <Text style={{
                         fontWeight: '700',
-                        fontSize: 30
+                        fontSize: 30,
+                        marginTop: 38
                     }}>No trips booked</Text>
                     </> : <><Image
                         source={require('../../../assets/past_trips.png')}
                         style={{
                             width: 345,
                             height: 225,
-                            resizeMode: 'contain'
+                            resizeMode: 'contain',
+                            marginTop: 35
                         }}
                     />
                     <Text style={{
                         fontWeight: '700',
-                        fontSize: 30
+                        fontSize: 30,
+                        marginTop: 38
                     }}>No past trips</Text>
                     </>}
                 </View>

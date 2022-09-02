@@ -47,9 +47,9 @@ const store = createStore({
                     "phone": response.data?.phone || ''
                 })
                 await AsyncStorage.setItem('user', jsonValue)
-              } catch (e) {
+            } catch (e) {
                 console.error(e);
-              }
+            }
         }
     }),
     loginAction: thunk(async (action, payload) => {
@@ -60,6 +60,19 @@ const store = createStore({
             "email": response.data?.email || '',
             "phone": response.data?.phone || ''
         });
+        if(!response.data.error && response.ok){
+            try {
+                const jsonValue = JSON.stringify({
+                    "id": response.data?.id || '',
+                    "first_name": response.data?.first_name || '',
+                    "email": response.data?.email || '',
+                    "phone": response.data?.phone || ''
+                })
+                await AsyncStorage.setItem('user', jsonValue)
+            } catch (e) {
+                console.error(e);
+            }
+        }
     }),
     getCarsAction: thunk(async (action, payload) => {
         const response = await api.getCars();

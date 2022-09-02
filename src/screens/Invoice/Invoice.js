@@ -57,7 +57,8 @@ export function Invoice(props) {
         <View
             style={{
                 flex: 1,
-                paddingHorizontal: 15
+                paddingHorizontal: 15,
+                paddingTop: 30
             }}
         >
             <RBSheet
@@ -76,7 +77,7 @@ export function Invoice(props) {
             >
                 <CheckoutSheet close={_ => refRBSheetCheckout.current.close()} navigation={props.navigation.navigate} />
             </RBSheet>
-            <SafeAreaView style={{
+            {/* <SafeAreaView style={{
                 // flexDirection: 'row'
                 justifyContent: 'center',
                 alignItems: 'center'
@@ -108,7 +109,7 @@ export function Invoice(props) {
                     fontWeight: '600',
                     fontSize: 17
                 }}>Checkout</Text>
-            </SafeAreaView>
+            </SafeAreaView> */}
 
             <View style={{
                 flexDirection: 'row',

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { StripeProvider, CardField } from '@stripe/stripe-react-native';
 
-export function CheckoutSheet() {
+export function CheckoutSheet({close}) {
     return (
         <StripeProvider
             publishableKey="pk_test_51JFydUSIM90cAhQ35WIzHS6ESS4dNhvozKq1xNKQa7plueeyAJPSWiPiRM92gZHyvRDxr6u91eYYSUKjWxAjHXIG00FRSZ43UM"
@@ -54,7 +54,7 @@ export function CheckoutSheet() {
                             color: 'black',
                             fontWeight: '600',
                             fontSize: 17
-                        }}>Checkout</Text>
+                        }}>Payment info</Text>
                     </SafeAreaView>
                     <CardField
                         postalCodeEnabled={true}

@@ -12,7 +12,9 @@ import {
     Invoice,
     Delivery,
     Location,
-    Profile
+    Profile,
+    Account,
+    LicenceApproval
 } from '../screens';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
@@ -44,6 +46,27 @@ function SearchTab(props) {
             <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="List" component={List} />
             {/* <Stack.Screen name="Detail" component={Detail} /> */}
+        </Stack.Navigator>
+    );
+}
+
+function AccountInfo(props) {
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                // headerShown: false
+            }}
+            initialRouteName="Profile"
+        >
+            <Stack.Screen name="Profile" component={Profile} options={{
+                headerShown: false
+            }}/>
+            <Stack.Screen name="Account" component={Account} options={{
+                title: 'Account info'
+            }} />
+            <Stack.Screen name="LicenceApproval" component={LicenceApproval} options={{
+                title: 'Licence approval'
+            }}/>
         </Stack.Navigator>
     );
 }
@@ -114,7 +137,7 @@ function TabNavigation(props) {
 
             <Tab.Screen
                 name="More"
-                component={Profile}
+                component={AccountInfo}
                 options={{
                     tabBarIcon: ({ focused }) => focused ? <Image
                         source={require('../../assets/more_focus.png')}
@@ -151,7 +174,10 @@ function DetailTab(props) {
         >
             <DetailTabStack.Screen name="Detail" component={Detail} />
             <DetailTabStack.Screen name="Tab" component={TabNavigation} />
-            <DetailTabStack.Screen name="Invoice" component={Invoice} />
+            <DetailTabStack.Screen name="Invoice" component={Invoice} options={{
+                headerShown: true,
+                title: 'Checkout'
+            }} />
             <DetailTabStack.Screen name="Delivery" component={Delivery} />
             <DetailTabStack.Screen name="Location" component={Location} />
         </DetailTabStack.Navigator>
