@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import {
     View,
     Text,
-    TextInput,
+    Platform,
     Dimensions,
     Image,
     SafeAreaView,
     TouchableOpacity,
     ActivityIndicator
 } from "react-native";
-import { useStoreActions } from "easy-peasy";
+import { useStoreActions, useStoreState } from "easy-peasy";
 import { AccountTextField } from "../../components";
 
 const { height, width } = Dimensions.get('window');
@@ -17,6 +17,12 @@ const { height, width } = Dimensions.get('window');
 export function AddPhoneSheet({ close, navigation }) {
 
     const [phone, setPhone] = useState('');
+
+    const [loading, setLoading] = useState(false);
+
+    const updateUserInfoAction = useStoreActions(actions => actions.updateUserInfoAction);
+
+    const user = useStoreState(state => state.user);
 
     return (
         <View style={{
@@ -84,7 +90,8 @@ export function AddPhoneSheet({ close, navigation }) {
             </View>
             <SafeAreaView>
                 <View style={{
-                    paddingHorizontal: 15
+                    paddingHorizontal: 15,
+                    paddingBottom: Platform.OS === "android" ? 30 : null
                 }}>
                     <TouchableOpacity 
                         style={{
@@ -95,15 +102,25 @@ export function AddPhoneSheet({ close, navigation }) {
                             width: '100%',
                             height: 51
                         }}
-                        onPress={_ => {
-                            close()
+                        onPress={async _ => {
+                            setLoading(true);
+                            const [first_name, last_name] = user.first_name?.split(' ') || 'N/A';
+                            await updateUserInfoAction({
+                                "id": user.id,
+                                "email": user.email,
+                                first_name,
+                                last_name,
+                                "phone": phone
+                            });
+                            setLoading(false);
+                            close();
                         }}
                     >
-                        <Text style={{
+                        {!loading ? <Text style={{
                             fontWeight: '600',
                             fontSize: 20,
                             color: 'white'
-                        }}>Save and continue</Text>
+                        }}>Save and continue</Text> : <ActivityIndicator size={"large"} color={"white"} />}
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>

@@ -91,8 +91,8 @@ export function Account(props) {
                             fontWeight: '600',
                             fontSize: 16,
                             marginRight: 16
-                        }}>{user?.phoneNumber || 'N/A'}</Text>
-                        <TouchableOpacity
+                        }}>{user?.phone || 'N/A'}</Text>
+                        {!user.phone ? <TouchableOpacity
                             onPress={_ => refRBSheet.current.open()}
                         >
                             <Image 
@@ -103,7 +103,7 @@ export function Account(props) {
                                     resizeMode: 'contain'
                                 }}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> : null}
                     </View>
                 </View>
             </View>

@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     ImageBackground,
     StatusBar,
-    Dimensions
+    Dimensions,
+    ActivityIndicator
 } from 'react-native'
 import {
     TextField,
@@ -23,7 +24,9 @@ export function Login(props){
     
     const [password, setPassword] = useState('');
 
-    const loginAction = useStoreActions(actions => actions.loginAction)
+    const loginAction = useStoreActions(actions => actions.loginAction);
+
+    const [loading, setLoading] = useState(false);
 
     return (
         <ImageBackground
@@ -62,12 +65,13 @@ export function Login(props){
             </TouchableOpacity>
 
             <TouchableOpacity 
-                onPress={_ => {
-                    // props.navigation.navigate('Main');
-                    loginAction({
+                onPress={async _ => {
+                    setLoading(true);
+                    await loginAction({
                         email,
                         password
-                    })
+                    });
+                    setLoading(false)
                 }}
                 style={{
                     borderRadius: 30,
@@ -80,10 +84,10 @@ export function Login(props){
                     marginTop: 100
                 }}
             >
-                <Text style={{
+                {!loading ? <Text style={{
                     color: 'white',
                     fontSize: 21,
-                }}>Login</Text>
+                }}>Login</Text> : <ActivityIndicator size={"large"} color="white" />}
             </TouchableOpacity>
 
             {/* <Text style={{

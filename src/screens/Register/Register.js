@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     ImageBackground,
     StatusBar,
-    Image
+    ActivityIndicator
 } from 'react-native'
 import {
     TextField
@@ -22,15 +22,16 @@ export function Register(props) {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     return (
         <ImageBackground
             style={{
                 flex: 1,
                 justifyContent: 'center',
-                paddingTop: 80,
+                paddingTop: 100,
                 alignItems: 'center',
-                paddingBottom: 20
+                // paddingBottom: 20
             }}
             source={require('../../../assets/background.png')}
         >
@@ -88,23 +89,31 @@ export function Register(props) {
                     height: 44,
                     marginVertical: 10
                 }}
-                onPress={_ => {
+                onPress={async _ => {
+                    if(!(/^[a-z0-9][a-z0-9-_\.]+@([a-z]|[a-z0-9]?[a-z0-9-]+[a-z0-9])\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/.test(email))) {
+                        alert("Invalid email");
+                        return;
+                    }
+                    if(password === ''){
+                        alert('Please enter all credentials!');
+                    }
                     if(password !== confirmPassword){
                         alert("Password not confirmed!");
                         return;
                     }
-                    createUserAction({
+                    setLoading(true);
+                    await createUserAction({
                         email,
                         first_name: fullName,
-                        password,
-                        phone
+                        password
                     });
+                    setLoading(false);
                 }}
             >
-                <Text style={{
+                {!loading ? <Text style={{
                     color: 'white',
                     fontSize: 21,
-                }}>Sign Up</Text>
+                }}>Sign Up</Text> : <ActivityIndicator color="white" size={"large"} />}
             </TouchableOpacity>
 
             <View style={{

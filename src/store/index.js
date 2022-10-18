@@ -13,11 +13,17 @@ const store = createStore({
     startDate: '',
     UI_endTime: '',
     UI_startTime: '',
+    selectedCar: null,
+    reservation: null,
     setUser: action((state, payload) => {
         state.user = payload;
     }),
+    setReservation: action((state, payload) => {
+        state.reservation = payload;
+    }),
     setCar: action((state, payload) => {
-        state.cars = payload;
+        // console.log('Pay: ', payload);
+        state.selectedCar = payload;
     }),
     setCarList: action((state, payload) => {
         state.cars = payload
@@ -32,6 +38,7 @@ const store = createStore({
     }),
     createUserAction: thunk(async (action, payload) => {
         const response = await api.createUser(payload);
+        console.log('Signup resp: ', response.data);
         if(response.data.msg === "success !" && response.ok){
             action.setUser({
                 "id": response.data?.id || '',
@@ -54,13 +61,18 @@ const store = createStore({
     }),
     loginAction: thunk(async (action, payload) => {
         const response = await api.login(payload);
-        action.setUser({
-            "id": response.data?.id || '',
-            "first_name": response.data?.first_name || '',
-            "email": response.data?.email || '',
-            "phone": response.data?.phone || ''
-        });
-        if(!response.data.error && response.ok){
+        console.log('Response (Login): ', response.data);
+        if(response.data.error === "invalid credentials"){
+            alert('Invalid credentials');
+        }
+        else if(!response.data.error && response.ok){
+            // console.log('res: ', response.data);
+            action.setUser({
+                "id": response.data?.id || '',
+                "first_name": response.data?.first_name || '',
+                "email": response.data?.email || '',
+                "phone": response.data?.phone || ''
+            });
             try {
                 const jsonValue = JSON.stringify({
                     "id": response.data?.id || '',
@@ -79,18 +91,34 @@ const store = createStore({
         action.setCar(response.data)
     }),
     cityFilterAction: thunk(async (action, payload) => {
-        console.log('Payload: ', payload);
         const response = await api.cityFilter(payload);
-        if(response.data?.error === "failure !"){
-            Alert.alert(respone.data.error);
-        }
-        else{
+        if(response.ok){
             action.setCarList(response.data);
         }
+        return response;
     }),
     availableCarsAction: thunk(async (action, payload) => {
         const response = await api.availableCars(payload);
         return response;
+    }),
+    saveReservationAction: thunk(async (actions, payload) => {
+        const res = await api.saveReservation(payload);
+        actions.setReservation(res.data[0]);
+        return res;
+    }),
+    updateReservation: thunk(async (action, payload) => {
+        const res = await api.updateReservation(payload);
+        return res;
+    }),
+    updateUserInfoAction: thunk(async (action, payload) => {
+        console.log("Payload: ", payload);
+        const res = await api.updateUserInfo(payload);
+        console.log('New user: ', res.data);
+        if(res.ok){
+            const jsonValue = JSON.stringify(res.data);
+            await AsyncStorage.setItem('user', jsonValue);
+            action.setUser(res.data);
+        }
     })
 });
 

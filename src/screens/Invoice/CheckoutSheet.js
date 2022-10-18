@@ -8,12 +8,12 @@ import {
 } from 'react-native';
 import { StripeProvider, CardField } from '@stripe/stripe-react-native';
 
-export function CheckoutSheet({close}) {
+export function CheckoutSheet({close, navigation}) {
     return (
         <StripeProvider
             publishableKey="pk_test_51JFydUSIM90cAhQ35WIzHS6ESS4dNhvozKq1xNKQa7plueeyAJPSWiPiRM92gZHyvRDxr6u91eYYSUKjWxAjHXIG00FRSZ43UM"
-            urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
-            merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
+            // urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+            // merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
         >
             <View style={{
                 flex: 1,
@@ -56,27 +56,35 @@ export function CheckoutSheet({close}) {
                             fontSize: 17
                         }}>Payment info</Text>
                     </SafeAreaView>
-                    <CardField
-                        postalCodeEnabled={true}
-                        placeholders={{
-                            number: '4242 4242 4242 4242',
-                        }}
-                        cardStyle={{
-                            backgroundColor: '#FFFFFF',
-                            textColor: '#000000',
-                        }}
-                        style={{
-                            width: '100%',
-                            height: 50,
-                            marginVertical: 30,
-                        }}
-                        onCardChange={(cardDetails) => {
-                            console.log('cardDetails', cardDetails);
-                        }}
-                        onFocus={(focusedField) => {
-                            console.log('focusField', focusedField);
-                        }}
-                    />
+                    <View style={{
+                        borderColor: 'rgba(118, 118, 128, 0.12)',
+                        borderWidth: 1,
+                        marginTop: 30
+                    }}>
+                        <CardField
+                            postalCodeEnabled={true}
+                            placeholders={{
+                                number: '4242 4242 4242 4242',
+                            }}
+                            cardStyle={{
+                                backgroundColor: '#FFFFFF',
+                                textColor: '#000000',
+                                placeholderColor: 'grey'
+                                // borderColor: 'rgba(0, 0, 0, 0.35)'
+                            }}
+                            style={{
+                                width: '100%',
+                                height: 50,
+                                // marginVertical: 30,
+                            }}
+                            onCardChange={(cardDetails) => {
+                                // console.log('cardDetails', cardDetails);
+                            }}
+                            onFocus={(focusedField) => {
+                                // console.log('focusField', focusedField);
+                            }}
+                        />
+                    </View>
                 </View>
                 <View style={{
                     paddingHorizontal: 20,

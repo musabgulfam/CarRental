@@ -7,7 +7,9 @@ export const URIS = {
     login: 'auth/login/',
     cars: 'car/get-cars/',
     city: cityName => `dashboard/search/?city=${cityName}`,
-    availableCars: `dashboard/car-available/`
+    availableCars: `dashboard/car-available/`,
+    saveReservation: `reservation/new/`,
+    updateUserInfo: `auth/user-info/`
 };
 
 const createApiClient = (baseURL = BASE_URL) => {
@@ -35,12 +37,21 @@ const createApiClient = (baseURL = BASE_URL) => {
 
     const availableCars = payload => api.post(URIS.availableCars, payload);
 
+    const saveReservation = payload => api.post(URIS.saveReservation, payload);
+
+    const updateReservation = payload => api.put(URIS.saveReservation, payload);
+
+    const updateUserInfo = payload => api.put(URIS.updateUserInfo, payload);
+
     return {
         createUser,
         login,
         getCars,
         cityFilter,
-        availableCars
+        availableCars,
+        saveReservation,
+        updateReservation,
+        updateUserInfo
     };
 };
 

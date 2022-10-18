@@ -38,6 +38,9 @@ export function TextField({
                 autoCorrect={false}
                 autoComplete="off"
                 autoCapitalize="none"
+                style={{
+                    color: 'rgba(0, 0, 0, 0.51)'
+                }}
             />
         </View>
     );

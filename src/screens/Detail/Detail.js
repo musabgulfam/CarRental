@@ -33,6 +33,10 @@ export function Detail(props) {
 
     const [loading, setLoading] = useState(false);
 
+    const saveReservation = useStoreActions(actions => actions.saveReservationAction);
+
+    const user = useStoreState(state => state.user);
+
     const {
         title,
         car_model: model,
@@ -331,7 +335,8 @@ export function Detail(props) {
                         <Text style={{
                             fontWeight: '400',
                             fontSize: 16,
-                            marginTop: 5
+                            marginTop: 5,
+                            color: 'rgba(0, 0, 0, 0.7)'
                         }}>2 doors</Text>
                     </View>
                     <View style={{
@@ -349,7 +354,8 @@ export function Detail(props) {
                         <Text style={{
                             fontWeight: '400',
                             fontSize: 16,
-                            marginTop: 5
+                            marginTop: 5,
+                            color: 'rgba(0, 0, 0, 0.7)'
                         }}>2 seats</Text>
                     </View>
                     <View style={{
@@ -368,7 +374,8 @@ export function Detail(props) {
                             fontWeight: '400',
                             fontSize: 16,
                             marginTop: 5,
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            color: 'rgba(0, 0, 0, 0.7)'
                         }}>Gas</Text>
                     </View>
                 </View>
@@ -687,32 +694,46 @@ export function Detail(props) {
                         </View>
                         <TouchableOpacity
                             onPress={async _ => {
-                                // if(startDate === "" || endDate === ""){
-                                //     alert("Please select start and end date.");
-                                //     return;
-                                // }
-                                // setLoading(true)
-                                // const response = await availableCarsAction({
-                                //     car_id: id,
-                                //     start_date: startDate,
-                                //     end_date: endDate
-                                // });
+                                if(startDate === "" || endDate === ""){
+                                    alert("Please select start and end date.");
+                                    return;
+                                }
+                                setLoading(true)
+                                const response = await availableCarsAction({
+                                    car_id: id,
+                                    start_date: startDate,
+                                    end_date: endDate
+                                });
                                 // console.log('RR: ', response.data);
-                                // if(response.data.msg !== "success"){
-                                //     alert("Car is not available in specified time period.")
-                                // }
-                                // else{
-                                //     // props.navigation.navigate('Invoice', {
-                                //     //     title,
-                                //     //     rent,
-                                //     //     id,
-                                //     //     model,
-                                //     //     year,
-                                //     //     city
-                                //     // });
-                                //     // props.navigation.navigate('Delivery');
-                                // }
-                                // setLoading(false)
+                                if(response.data.msg !== "success"){
+                                    alert("Car is not available in specified time period.");
+                                    return;
+                                }
+                                else{
+                                    const res = await saveReservation({
+                                        car: id,
+                                        start_date: startDate,
+                                        end_date: endDate,
+                                        user: user.id
+                                    });
+                                    console.log('Response: ', res.data);
+                                    // props.navigation.navigate('Invoice', {
+                                    //     title,
+                                    //     rent,
+                                    //     id,
+                                    //     model,
+                                    //     year,
+                                    //     city
+                                    // });
+                                    // props.navigation.navigate('Delivery');
+                                    if(!res.ok){
+                                        alert("Error occured during reservation");
+                                        setLoading(false)
+                                        return;
+                                    }
+
+                                }
+                                setLoading(false)
                                 props.navigation.navigate('Invoice', {
                                     title,
                                     rent,

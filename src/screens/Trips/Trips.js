@@ -26,7 +26,8 @@ export function Trips(props) {
                 }}>
                     <Text style={{
                         fontWeight: '600',
-                        fontSize: 17
+                        fontSize: 17,
+                        color: 'black'
                     }}>Trips</Text>
                 </View>
                 <View style={{

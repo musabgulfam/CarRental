@@ -62,10 +62,12 @@ function AccountInfo(props) {
                 headerShown: false
             }}/>
             <Stack.Screen name="Account" component={Account} options={{
-                title: 'Account info'
+                title: 'Account info',
+                headerTitleAlign: 'center'
             }} />
             <Stack.Screen name="LicenceApproval" component={LicenceApproval} options={{
-                title: 'Licence approval'
+                title: 'Licence approval',
+                headerTitleAlign: 'center'
             }}/>
         </Stack.Navigator>
     );
@@ -82,7 +84,8 @@ function TabNavigation(props) {
                     backgroundColor: '#F7941D',
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
-                    paddingTop: 10
+                    padding: 15,
+                    height: 60
                 }
             }}
             initialRouteName={"Search"}
@@ -176,10 +179,15 @@ function DetailTab(props) {
             <DetailTabStack.Screen name="Tab" component={TabNavigation} />
             <DetailTabStack.Screen name="Invoice" component={Invoice} options={{
                 headerShown: true,
-                title: 'Checkout'
+                title: 'Checkout',
+                headerTitleAlign: 'center'
             }} />
             <DetailTabStack.Screen name="Delivery" component={Delivery} />
-            <DetailTabStack.Screen name="Location" component={Location} />
+            <DetailTabStack.Screen name="Location" component={Location} options={{
+                headerShown: true,
+                title: 'Location',
+                headerTitleAlign: 'center'
+            }} />
         </DetailTabStack.Navigator>
     );
 }
@@ -212,7 +220,7 @@ export function Navigation(props) {
                 }}
                 initialRouteName={"Auth"}
             >
-                {loading ? <Stack.Screen name={"Loading"} component={Loading} /> : !user ? <Stack.Screen name={"Auth"} component={AuthNavigation} /> : <Stack.Screen name={"Main"} component={DetailTab} />}
+                {loading ? <Stack.Screen name={"Loading"} component={Loading} /> : user ? <Stack.Screen name={"Main"} component={DetailTab} /> : <Stack.Screen name={"Auth"} component={AuthNavigation} />}
             </Stack.Navigator>
         </NavigationContainer>
     );

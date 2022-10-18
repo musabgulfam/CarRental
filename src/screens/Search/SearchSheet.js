@@ -55,62 +55,21 @@ export function SearchSheet ({ close, navigation }) {
                 }}
                 onSubmitEditing={async _ => {
                     setLoading(true);
-                    await cityFilterAction(city);
+                    const res = await cityFilterAction(city);
+                    if(res.data?.msg === "failure !" || !res.ok){
+                        alert(res?.data?.error || "Unknown error");
+                        setLoading(false);
+                        return;
+                    }
+                    // console.log('funk res: ', res);
+                    if(!res.ok){
+                        return;
+                    }
                     setLoading(false);
                     close();
                     navigation.navigate('List');
                 }}
             />
-
-            <View style={{
-                marginTop: 25,
-                flexDirection: 'row'
-            }}>
-                <View style={{
-                    marginRight: 25
-                }}>
-                    <Image 
-                        source={require('../../../assets/location.png')}
-                        style={{
-                            width: 19,
-                            height: 19,
-                            resizeMode: 'contain'
-                        }}
-                    />
-                </View>
-                <View>
-                    <Text style={{
-                        color: '#000000',
-                        fontWeight: '600',
-                        fontSize: 17
-                    }}>Current Location</Text>
-                </View>
-            </View>
-
-            <View style={{
-                marginTop: 20,
-                flexDirection: 'row'
-            }}>
-                <View style={{
-                    marginRight: 25
-                }}>
-                    <Image 
-                        source={require('../../../assets/recent.png')}
-                        style={{
-                            width: 21,
-                            height: 21,
-                            resizeMode: 'contain'
-                        }}
-                    />
-                </View>
-                <View>
-                    <Text style={{
-                        color: '#000000',
-                        fontWeight: '600',
-                        fontSize: 17
-                    }}>Karachi, Sindh</Text>
-                </View>
-            </View>
 
             {
                 loading ? <View style={{

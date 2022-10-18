@@ -5,7 +5,8 @@ import {
     Dimensions,
     TouchableOpacity,
     Image,
-    SafeAreaView
+    SafeAreaView,
+    Platform
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import DatePicker from 'react-native-date-picker'
@@ -36,7 +37,7 @@ export function CalendarSheet({ close }) {
         //    [startDate]: {selected: true, selectedColor: '#F7941D'}
     });
 
-    function renderTripStartDate(dates, returnOnlyDate=false) {
+    function renderTripStartDate(dates, returnOnlyDate = false) {
         const tempObj = { ...dates };
         if (!Object.keys(tempObj).length) {
             return '--'
@@ -49,7 +50,7 @@ export function CalendarSheet({ close }) {
         day1 = moment(day1).format(_format);
         day2 = moment(day2).format(_format);
         // console.log('Day1: ', day1, ' Day2: ', day2);
-        if(returnOnlyDate){
+        if (returnOnlyDate) {
             if (day1 < day2) {
                 return `${day1}`
             }
@@ -65,7 +66,7 @@ export function CalendarSheet({ close }) {
         }
     }
 
-    function renderTripEndDate(dates, returnOnlyDate=false) {
+    function renderTripEndDate(dates, returnOnlyDate = false) {
         const tempObj = { ...dates };
         if (Object.keys(tempObj).length <= 1) {
             // console.log('Dates: ', tempObj);
@@ -75,7 +76,7 @@ export function CalendarSheet({ close }) {
         day1 = moment(day1).format(_format);
         day2 = moment(day2).format(_format);
         // console.log('Day1: ', day1, ' Day2: ', day2);
-        if(returnOnlyDate){
+        if (returnOnlyDate) {
             if (day1 > day2) {
                 return `${day1}`
             }
@@ -91,289 +92,253 @@ export function CalendarSheet({ close }) {
         }
     }
 
-    // console.log('MD: ', markedDates);
-
     return (
         <View style={{
             height,
-
+            flex: 1
         }}>
-            <DatePicker
-                modal
-                open={endTimeModal}
-                date={endTime}
-                onConfirm={(date) => {
-                    setEndTimeModal(false)
-                    setEndTime(date)
-                }}
-                onCancel={() => {
-                    setEndTimeModal(false)
-                }}
-                mode="time"
-            />
-            <DatePicker
-                modal
-                open={startTimeModal}
-                date={startTime}
-                onConfirm={(date) => {
-                    setStartTimeModal(false)
-                    setStartTime(date)
-                }}
-                onCancel={() => {
-                    setStartTimeModal(false)
-                }}
-                mode="time"
-            />
-            <SafeAreaView style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-                <View style={{
-                    paddingHorizontal: 20,
-                    position: 'absolute',
-                    left: 10,
-                    top: 20
-                }}>
-                    <TouchableOpacity
-                        onPress={_ => {
-                            close();
-                        }}
-                    >
-                        <Image
-                            source={require('../../../assets/cross.png')}
-                            style={{
-                                width: 17,
-                                height: 17,
-                                resizeMode: 'contain'
-                            }}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <View style={{
-                    alignSelf: 'center'
-                }}>
-                    <Text style={{
-                        fontWeight: '600',
-                        fontSize: 16
-                    }}>Trip Dates</Text>
-                </View>
-            </SafeAreaView>
             <View style={{
-                height: 176,
-                justifyContent: 'center',
-                alignItems: 'center'
+                flex: 1
             }}>
-                <View style={{
+                <DatePicker
+                    modal
+                    open={endTimeModal}
+                    date={endTime}
+                    onConfirm={(date) => {
+                        setEndTimeModal(false)
+                        setEndTime(date)
+                    }}
+                    onCancel={() => {
+                        setEndTimeModal(false)
+                    }}
+                    mode="time"
+                />
+                <DatePicker
+                    modal
+                    open={startTimeModal}
+                    date={startTime}
+                    onConfirm={(date) => {
+                        setStartTimeModal(false)
+                        setStartTime(date)
+                    }}
+                    onCancel={() => {
+                        setStartTimeModal(false)
+                    }}
+                    mode="time"
+                />
+                <SafeAreaView style={{
                     flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // flex: 0.1
+                }}>
+                    <View style={{
+                        paddingHorizontal: 20,
+                        position: 'absolute',
+                        left: 10,
+                        // top: 20
+                    }}>
+                        <TouchableOpacity
+                            onPress={_ => {
+                                close();
+                            }}
+                        >
+                            <Image
+                                source={require('../../../assets/cross.png')}
+                                style={{
+                                    width: 17,
+                                    height: 17,
+                                    resizeMode: 'contain'
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        alignSelf: 'center'
+                    }}>
+                        <Text style={{
+                            fontWeight: '600',
+                            fontSize: 16
+                        }}>Trip Dates</Text>
+                    </View>
+                </SafeAreaView>
+                <View style={{
+                    flex: 0.5,
+                    justifyContent: 'center',
                     alignItems: 'center'
                 }}>
                     <View style={{
+                        flexDirection: 'row',
                         alignItems: 'center'
                     }}>
-                        <Text style={{
-                            fontWeight: '700',
-                            fontSize: 24
-                        }}>{renderTripStartDate({ ...markedDates })}</Text>
-                        <Text style={{
-                            fontWeight: '600',
-                            fontSize: 18
-                        }}>{moment(startTime).format('LT')}</Text>
-                    </View>
-                    <View>
-                        <Image
-                            source={require('../../../assets/double_arrow.png')}
-                            style={{
-                                width: 30,
-                                height: 30,
-                                resizeMode: 'contain',
-                                marginHorizontal: 17
-                            }}
-                        />
-                    </View>
-                    <View style={{
-                        alignItems: 'center'
-                    }}>
-                        <Text style={{
-                            fontWeight: '700',
-                            fontSize: 24
-                        }}>{renderTripEndDate({ ...markedDates })}</Text>
-                        <Text style={{
-                            fontWeight: '600',
-                            fontSize: 18
-                        }}>{moment(endTime).format('LT')}</Text>
+                        <View style={{
+                            alignItems: 'center'
+                        }}>
+                            <Text style={{
+                                fontWeight: '700',
+                                fontSize: 24,
+                                color: 'black'
+                            }}>{renderTripStartDate({ ...markedDates })}</Text>
+                            <Text style={{
+                                fontWeight: '600',
+                                fontSize: 18,
+                                color: 'black'
+                            }}>{moment(startTime).format('LT')}</Text>
+                        </View>
+                        <View>
+                            <Image
+                                source={require('../../../assets/double_arrow.png')}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    resizeMode: 'contain',
+                                    marginHorizontal: 17
+                                }}
+                            />
+                        </View>
+                        <View style={{
+                            alignItems: 'center'
+                        }}>
+                            <Text style={{
+                                fontWeight: '700',
+                                fontSize: 24,
+                                color: 'black'
+                            }}>{renderTripEndDate({ ...markedDates })}</Text>
+                            <Text style={{
+                                fontWeight: '600',
+                                fontSize: 18,
+                                color: 'black'
+                            }}>{moment(endTime).format('LT')}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <Calendar
-                theme={{
-                    arrowColor: '#F7941D',
-                    selectedDayTextColor: 'white',
-                    // backgroundColor: '#F7941D',
-                    // calendarBackground: '#F7941D',
-                    // textSectionTitleColor: '#F7941D',
-                    textSectionTitleDisabledColor: '#F7941D',
-                    selectedDayBackgroundColor: '#F7941D',
-                    todayTextColor: markedDates[moment().format(_format)] ? 'white' : '#F7941D',
-                    // dayTextColor: '#F7941D',
-                    textDisabledColor: '#F7941D',
-                    dotColor: '#F7941D',
-                    selectedDotColor: '#F7941D',
-                    disabledArrowColor: '#F7941D',
-                    // monthTextColor: '#F7941D',
-                    indicatorColor: '#F7941D',
-                    // textDayFontFamily: 'monospace',
-                    // textMonthFontFamily: 'monospace',
-                    // textDayHeaderFontFamily: 'monospace',
-                    // textDayFontWeight: '300',
-                    // textMonthFontWeight: 'bold',
-                    // textDayHeaderFontWeight: '300',
-                    // textDayFontSize: 16,
-                    // textMonthFontSize: 16,
-                    // textDayHeaderFontSize: 16,
-                    textDayFontSize: 20,
-                    textDayFontWeight: '400',
-                    textDayHeaderFontSize: 13,
-                    textDayHeaderFontWeight: '400',
-                    textMonthFontSize: 17,
-                    textMonthFontWeight: '600',
-                    // todayBackgroundColor: '#F7941D'
-                }}
-                style={{
-                    // borderWidth: 4,
-                    // borderColor: 'red'
-                }}
-                onDayPress={day => {
-                    let selectedDate = moment(day.dateString).format(_format);
-                    if (_today > selectedDate) {
-                        return;
-                    }
-                    // console.log('length: ', Object.keys(markedDates).length);
-                    if (Object.keys(markedDates).length >= 2) {
-                        setMarkedDates({});
-                        return;
-                    }
-                    let tempObj = { ...markedDates };
-                    let selected = true;
-                    if (markedDates[selectedDate]) {
-                        // selected = !(markedDates[selectedDate].selected);
-                        delete tempObj[selectedDate];
-                    }
-                    else {
-                        tempObj[selectedDate] = { selected: true, selectedColor: '#F7941D' }
-                    }
-                    setMarkedDates({ ...tempObj });
-                }}
-                markedDates={markedDates}
-            />
-            <View style={{
-                paddingHorizontal: 20,
-                flexDirection: 'row',
-                marginTop: 20,
-                width,
-                alignItems: 'center',
-                justifyContent: 'space-between'
-            }}>
-                <Text style={{
-                    fontWeight: '600',
-                    fontSize: 16
-                }}>Start time</Text>
-                {/* <DateTimePickerModal
-                    isVisible={isTimePickerVisible}
-                    mode='time'
-                    value={startTime}
-                    onConfirm={date => setStartTime(new Date(date.timestamp))}
-                    // locale="en-EN"
-                    is24Hour={false}
-                    // onConfirm={handleConfirm}
-                    // onCancel={hideDatePicker}
-                    style={{
-                        width: 100
-                    }}
-                /> */}
-                <TouchableOpacity
-                    onPress={_ => {
-                        setStartTimeModal(true);
+                <Calendar
+                    theme={{
+                        arrowColor: '#F7941D',
+                        selectedDayTextColor: 'white',
+                        textSectionTitleDisabledColor: '#F7941D',
+                        selectedDayBackgroundColor: '#F7941D',
+                        todayTextColor: markedDates[moment().format(_format)] ? 'white' : '#F7941D',
+                        textDisabledColor: '#F7941D',
+                        dotColor: '#F7941D',
+                        selectedDotColor: '#F7941D',
+                        disabledArrowColor: '#F7941D',
+                        indicatorColor: '#F7941D',
+                        textDayFontSize: 20,
+                        textDayFontWeight: '400',
+                        textDayHeaderFontSize: 13,
+                        textDayHeaderFontWeight: '400',
+                        textMonthFontSize: 17,
+                        textMonthFontWeight: '600',
                     }}
                     style={{
-                        width: 98,
-                        height: 34,
-                        borderRadius: 8,
-                        backgroundColor: 'rgba(118, 118, 128, 0.12)',
-                        justifyContent: 'center',
-                        alignItems: 'center'
+                        // flex: 0.9
                     }}
-                >
-                    <Text style={{
-                        fontWeight: '400',
-                        fontSize: 17
-                    }}>{moment(startTime).format('LT')}</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={{
-                paddingHorizontal: 20,
-                flexDirection: 'row',
-                marginTop: 20,
-                width,
-                alignItems: 'center',
-                justifyContent: 'space-between'
-            }}>
-                <Text style={{
-                    fontWeight: '600',
-                    fontSize: 16
-                }}>End time</Text>
-                {/* <DateTimePickerModal
-                    isVisible={isTimePickerVisible}
-                    mode='time'
-                    value={endTime}
-                    onConfirm={date => {
-                        // console.log('date: ', date)
-                        setEndTime(date)
+                    onDayPress={day => {
+                        let selectedDate = moment(day.dateString).format(_format);
+                        if (_today > selectedDate) {
+                            return;
+                        }
+                        // console.log('length: ', Object.keys(markedDates).length);
+                        if (Object.keys(markedDates).length >= 2) {
+                            setMarkedDates({});
+                            return;
+                        }
+                        let tempObj = { ...markedDates };
+                        let selected = true;
+                        if (markedDates[selectedDate]) {
+                            // selected = !(markedDates[selectedDate].selected);
+                            delete tempObj[selectedDate];
+                        }
+                        else {
+                            tempObj[selectedDate] = { selected: true, selectedColor: '#F7941D' }
+                        }
+                        setMarkedDates({ ...tempObj });
                     }}
-                    // locale="en-EN"
-                    is24Hour={false}
-                    // onConfirm={handleConfirm}
-                    // onCancel={hideDatePicker}
-                    style={{
-                        width: 100
-                    }}
-                /> */}
-                <TouchableOpacity
-                    onPress={_ => {
-                        setEndTimeModal(true);
-                    }}
-                    style={{
-                        width: 98,
-                        height: 34,
-                        borderRadius: 8,
-                        backgroundColor: 'rgba(118, 118, 128, 0.12)',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Text style={{
-                        fontWeight: '400',
-                        fontSize: 17
-                    }}>{moment(endTime).format('LT')}</Text>
-                </TouchableOpacity>
+                    markedDates={markedDates}
+                />
+                <View style={{
+                    flex: 0.1
+                }}>
+                    <View style={{
+                        paddingHorizontal: 20,
+                        flexDirection: 'row',
+                        marginTop: 20,
+                        width,
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}>
+                        <Text style={{
+                            fontWeight: '600',
+                            fontSize: 16,
+                            color: 'black'
+                        }}>Start time</Text>
+                        <TouchableOpacity
+                            onPress={_ => {
+                                setStartTimeModal(true);
+                            }}
+                            style={{
+                                width: 98,
+                                height: 34,
+                                borderRadius: 8,
+                                backgroundColor: 'rgba(118, 118, 128, 0.12)',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text style={{
+                                fontWeight: '400',
+                                fontSize: 17,
+                                color: 'black'
+                            }}>{moment(startTime).format('LT')}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{
+                        paddingHorizontal: 20,
+                        flexDirection: 'row',
+                        marginTop: 20,
+                        width,
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Text style={{
+                            fontWeight: '600',
+                            fontSize: 16,
+                            color: 'black'
+                        }}>End time</Text>
+                        <TouchableOpacity
+                            onPress={_ => {
+                                setEndTimeModal(true);
+                            }}
+                            style={{
+                                width: 98,
+                                height: 34,
+                                borderRadius: 8,
+                                backgroundColor: 'rgba(118, 118, 128, 0.12)',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text style={{
+                                fontWeight: '400',
+                                fontSize: 17,
+                                color: 'black'
+                            }}>{moment(endTime).format('LT')}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
             <View style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: 50
+                paddingBottom: Platform.OS === "android" ? 30 : null
             }}>
                 <TouchableOpacity
                     onPress={_ => {
-                        if(Object.keys(markedDates).length !== 2){
+                        if (Object.keys(markedDates).length !== 2) {
                             alert("Please select all dates");
                             return;
                         }
-                        // console.log('SUBMIT LOG: ', {
-                        //     UI_startDate: `${renderTripStartDate({ ...markedDates })}, ${moment(startTime).format('LT')}`,
-                        //     UI_endDate: `${renderTripEndDate({ ...markedDates })}, ${moment(endTime).format('LT')}`,
-                        //     endDate: `${renderStartEndDate({ ...markedDates }, true)}`,
-                        //     startDate: `${renderTripEndDate({ ...markedDates }, true)}`,
-                        // });
                         setAllDates({
                             UI_startDate: `${renderTripStartDate({ ...markedDates })}`,
                             UI_startTime: `${moment(startTime).format('LT')}`,
